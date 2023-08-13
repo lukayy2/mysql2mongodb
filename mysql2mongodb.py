@@ -1,20 +1,24 @@
-import mysql.connector
+#!/usr/bin/env python3
 
-objSourceDB = mysql.connector.connect(
-    host="192.168.178.22",
-    user="testuser",
-    password="test123",
-    database="testdb"
-)
+from src.MysqlDatabase import MysqlDatabase
+from src.Mysql2MongoConverter import Mysql2MongoConverter
 
-strDatabase = "testdb"
-strTable = "Log"
+dictMysqlServerConnectionData = {
+    'host': '192.168.178.22',
+    'user': 'testuser',
+    'password': 'test123',
+    'database': 'testdb',
+    'table': 'Log'
+}
 
-print(objSourceDB)
-objCursor = objSourceDB.cursor()
+# dictMongoDBServerConnectionData = {
+#     'host': '192.168.178.35',
+#     'user': 'client',
+#     'password': 'RTB68ZzZWs',
+#     'database': 'testdb',
+#     'collection': 'Log'
+# }
 
-objCursor.execute("SHOW CREATE TABLE `{0}`.`{1}`".format(strDatabase, strTable))
+objMysqlDatabase = MysqlDatabase(dictMysqlServerConnectionData)
+strSourceTableCreateCode = objMysqlDatabase.fetchCreateCode(dictMysqlServerConnectionData['table'])
 
-objResultCreateTable = objCursor.fetchone()
-
-print(objResultCreateTable)
