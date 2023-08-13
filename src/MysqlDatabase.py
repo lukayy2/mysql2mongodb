@@ -4,7 +4,7 @@ import mysql.connector
 class MysqlDatabase:
 
     def __init__(self, dictConnectionData):
-        self.objSourceDB = mysql.connector.connect(
+        self.objDB = mysql.connector.connect(
             host=dictConnectionData['host'],
             user=dictConnectionData['user'],
             password=dictConnectionData['password'],
@@ -12,8 +12,8 @@ class MysqlDatabase:
         )
 
     def fetchCreateCode(self, strTableName):
-        objCursor = self.objSourceDB.cursor()
-        objCursor.execute("SHOW CREATE TABLE `{0}`.`{1}`;".format(self.objSourceDB.database, strTableName))
+        objCursor = self.objDB.cursor()
+        objCursor.execute("SHOW CREATE TABLE `{0}`.`{1}`;".format(self.objDB.database, strTableName))
 
         objResultCreateTable = objCursor.fetchone()
 
