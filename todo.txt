@@ -1,6 +1,7 @@
 - config input mysql Server and mongoDB server
 - read Create-Table code
-- convert Datatypes
 - create MongoDB Collection
 - read mysql Data in chunks and insert into mongodb collection
-- convert Datatypes?
+- convert Datatypes with Data-Types from Mysql-Table Create-Code
+-- auto-generate Validation for Collection
+- PrimaryKey from Mysql?

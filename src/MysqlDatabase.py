@@ -11,10 +11,26 @@ class MysqlDatabase:
             database=dictConnectionData['database']
         )
 
-    def fetchCreateCode(self, strTableName):
-        objCursor = self.objDB.cursor()
-        objCursor.execute("SHOW CREATE TABLE `{0}`.`{1}`;".format(self.objDB.database, strTableName))
+    def fetchColumnDetailsOfTable(self, strTableName):
+        """
+        Load Column Details of given Table
 
-        objResultCreateTable = objCursor.fetchone()
+        :param strTableName:
+        :return:
+        """
+        objCursor = self.objDB.cursor(buffered=True)
+        objCursor.execute("SELECT COLUMN_NAME, IS_NULLABLE, DATA_TYPE FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = '{0}' AND TABLE_NAME = '{1}';".format(self.objDB.database, strTableName))
 
-        return objResultCreateTable[1]
+        listColumnDetails = []
+
+        for arrRow in objCursor:
+            listColumnDetails.append(arrRow)
+
+        return listColumnDetails
+
+    def query(self, strTableName, intLimitStart, intLimitEnd):
+        objCursor = self.objDB.cursor(buffered=True)
+        objCursor.execute('SELECT * FROM {0} LIMIT {1},{2}'.format(strTableName, intLimitStart, intLimitEnd))
+
+        for row in objCursor:
+            print(row)

@@ -1,4 +1,5 @@
 import pymongo
+from collections import OrderedDict
 
 
 class MongoDatabase:
@@ -15,9 +16,8 @@ class MongoDatabase:
         self.objDB = self.objClient[dictConnectionData['database']]
         print(self.objDB)
 
-    def createCollection(self, strCollectionName):
+    def dropCollectionIfExists(self, strCollectionName):
         """
-        Creates Collection (drops it, if it exists already)
 
         :param strCollectionName:
         :return:
@@ -27,8 +27,6 @@ class MongoDatabase:
         if strCollectionName in listCollectionNames:
             objCollection = self.objDB[strCollectionName]
             objCollection.drop()
-
-        objCollection = self.objDB[strCollectionName]
 
     def insertMulti(self, strCollectionName, listDocuments):
         """
@@ -41,3 +39,6 @@ class MongoDatabase:
         objResult = objCollection.insert_many(listDocuments, True)
 
         return objResult.inserted_ids
+
+    def createCollectionWithValidator(self, strCollectionName, dictValidator):
+        self.objDB.create_collection(strCollectionName, validator=dictValidator)
