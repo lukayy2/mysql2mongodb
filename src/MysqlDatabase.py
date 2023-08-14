@@ -28,9 +28,21 @@ class MysqlDatabase:
 
         return listColumnDetails
 
+    def fetchTotalRowsOfTable(self, strTableName):
+        objCursor = self.objDB.cursor()
+        objCursor.execute('SELECT COUNT(*) FROM {0}'.format(strTableName))
+
+        dictResult = objCursor.fetchone()
+
+        return dictResult[0]
+
     def query(self, strTableName, intLimitStart, intLimitEnd):
         objCursor = self.objDB.cursor(buffered=True)
         objCursor.execute('SELECT * FROM {0} LIMIT {1},{2}'.format(strTableName, intLimitStart, intLimitEnd))
 
+        listResult = []
+
         for row in objCursor:
-            print(row)
+            listResult.append(row)
+
+        return listResult

@@ -1,5 +1,4 @@
 import pymongo
-from collections import OrderedDict
 
 
 class MongoDatabase:
@@ -14,7 +13,6 @@ class MongoDatabase:
         )
 
         self.objDB = self.objClient[dictConnectionData['database']]
-        print(self.objDB)
 
     def dropCollectionIfExists(self, strCollectionName):
         """

@@ -14,7 +14,7 @@ class Mysql2MongoConverter:
             if strIsNullable == 'NO':
                 listRequiredCols.append(strColumnName)
 
-            dictProperties[strColumnName] = {'bsonType': self.convertMysqlDatatypesToBSON(strDataType)}
+            dictProperties[strColumnName] = {'bsonType': self.__convertMysqlDatatypesToBSON(strDataType)}
 
         dictSchema['title'] = 'Collection Validation'
         dictSchema['bsonType'] = 'object'
@@ -25,7 +25,33 @@ class Mysql2MongoConverter:
         tmp['$jsonSchema'] = dictSchema
         return tmp
 
-    def convertMysqlDatatypesToBSON(self, strMysqlDatatype):
+    @staticmethod
+    def convertMysqlListToMongoDBDict(listMysqlRows, listMysqlColumnDetails):
+        """
+        Converts List of Columns from Mysql to Dict for insert into Mongo
+
+        :param listMysqlColumnDetails:
+        :param listMysqlRows:
+        :return:
+        """
+
+        listMongoDBMultiInsert = []
+
+        for listMysqlRow in listMysqlRows:
+            dictMongoDBDocument = {}
+
+            for i in range(len(listMysqlColumnDetails)):
+                mysqlColumnValue = listMysqlRow[i]
+
+                if mysqlColumnValue is not None:
+                    dictMongoDBDocument[listMysqlColumnDetails[i][0]] = mysqlColumnValue
+
+            listMongoDBMultiInsert.append(dictMongoDBDocument)
+
+        return listMongoDBMultiInsert
+
+    @staticmethod
+    def __convertMysqlDatatypesToBSON(strMysqlDatatype):
         """
 
         :param strMysqlDatatype:
