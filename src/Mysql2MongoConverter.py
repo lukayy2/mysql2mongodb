@@ -1,3 +1,5 @@
+import bson
+
 class Mysql2MongoConverter:
 
     def createMongoDBCollectionValidationFromMysqlColumns(self, listMysqlColumnDetails):
@@ -9,6 +11,7 @@ class Mysql2MongoConverter:
             strColumnName = arrColumn[0]
             strIsNullable = arrColumn[1]
             strDataType = arrColumn[2]
+            strColumnType = arrColumn[3]
 
             # if Column ist NOT Nullable on the Mysql Table, it will be "required" on the MongoDB Collection
             if strIsNullable == 'NO':
@@ -41,6 +44,7 @@ class Mysql2MongoConverter:
             dictMongoDBDocument = {}
 
             for i in range(len(listMysqlColumnDetails)):
+                strMysqlDataType = listMysqlColumnDetails[i][2]
                 mysqlColumnValue = listMysqlRow[i]
 
                 if mysqlColumnValue is not None:
@@ -48,6 +52,10 @@ class Mysql2MongoConverter:
                     # convertion of "set" Value into a string (using first Value from SET-Field)
                     if type(mysqlColumnValue) is set:
                         mysqlColumnValue = mysqlColumnValue.pop()
+
+                    # convert mysql unsinged int to 64bit Int for MongoDB
+                    if strMysqlDataType == 'uint':
+                        mysqlColumnValue = bson.int64.Int64(mysqlColumnValue)
 
                     dictMongoDBDocument[listMysqlColumnDetails[i][0]] = mysqlColumnValue
 
@@ -64,6 +72,8 @@ class Mysql2MongoConverter:
         """
         switch = {
             'int': 'int',
+            'uint': 'long',
+            'bigint': 'long',
             'datetime': 'date',
             'date': 'date',
             'decimal': 'double'

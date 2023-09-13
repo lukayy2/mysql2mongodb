@@ -19,11 +19,17 @@ class MysqlDatabase:
         :return:
         """
         objCursor = self.objDB.cursor(buffered=True)
-        objCursor.execute("SELECT COLUMN_NAME, IS_NULLABLE, DATA_TYPE FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = '{0}' AND TABLE_NAME = '{1}';".format(self.objDB.database, strTableName))
+        objCursor.execute("SELECT COLUMN_NAME, IS_NULLABLE, DATA_TYPE, COLUMN_TYPE FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = '{0}' AND TABLE_NAME = '{1}';".format(self.objDB.database, strTableName))
 
         listColumnDetails = []
 
         for arrRow in objCursor:
+            # unsigned int's must be converted to long
+            if arrRow[2] == 'int' and arrRow[3].find('unsigned') != -1:
+                arrRow = list(arrRow)
+                arrRow[2] = 'uint'
+                arrRow = tuple(arrRow)
+
             listColumnDetails.append(arrRow)
 
         return listColumnDetails
