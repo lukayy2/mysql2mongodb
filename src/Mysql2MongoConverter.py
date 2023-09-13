@@ -44,6 +44,11 @@ class Mysql2MongoConverter:
                 mysqlColumnValue = listMysqlRow[i]
 
                 if mysqlColumnValue is not None:
+
+                    # convertion of "set" Value into a string (using first Value from SET-Field)
+                    if type(mysqlColumnValue) is set:
+                        mysqlColumnValue = mysqlColumnValue.pop()
+
                     dictMongoDBDocument[listMysqlColumnDetails[i][0]] = mysqlColumnValue
 
             listMongoDBMultiInsert.append(dictMongoDBDocument)
