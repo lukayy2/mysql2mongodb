@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 import sys
-import configparser
-import os
+
+from src.CliInputParser import CliInputParser
 from src.MysqlDatabase import MysqlDatabase
 from src.Mysql2MongoConverter import Mysql2MongoConverter
 from src.MongoDatabase import MongoDatabase
@@ -11,13 +11,9 @@ from src.MongoDatabase import MongoDatabase
 ## all non-nullable Columns are required in the Collection
 ## Datatypes from mysql are converted into BSON Datatypes
 
-if not os.path.exists('config.ini'):
-    sys.stderr.write('no config.ini!\n')
-    exit(-1)
+objInputParser = CliInputParser()
+config = objInputParser.parse()
 
-config = configparser.ConfigParser()
-
-config.read('config.ini')
 intSelectLimit = int(config['default']['selectlimit'])
 
 # mysql connect and get Column Details
