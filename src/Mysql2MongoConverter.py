@@ -72,11 +72,15 @@ class Mysql2MongoConverter:
         """
         switch = {
             'int': 'int',
+            'tinyint': 'int',
+            'smallint': 'int',
+            'mediumint': 'int',
             'uint': 'long',
             'bigint': 'long',
             'datetime': 'date',
             'date': 'date',
-            'decimal': 'double'
+            'decimal': 'double',
+            'double': 'double'
         }
 
         # switch-case with default case "string"
