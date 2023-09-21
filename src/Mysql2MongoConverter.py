@@ -1,3 +1,5 @@
+import datetime
+
 import bson
 
 class Mysql2MongoConverter:
@@ -56,6 +58,10 @@ class Mysql2MongoConverter:
                     # convert mysql unsinged int to 64bit Int for MongoDB
                     if strMysqlDataType == 'uint':
                         mysqlColumnValue = bson.int64.Int64(mysqlColumnValue)
+
+                    # Date values come in "Datetime" Object from Mysql-Library, convert to normal date, without the Time-part
+                    if strMysqlDataType == 'date':
+                        mysqlColumnValue = datetime.datetime.strptime(mysqlColumnValue.isoformat(), "%Y-%m-%d")
 
                     dictMongoDBDocument[listMysqlColumnDetails[i][0]] = mysqlColumnValue
 

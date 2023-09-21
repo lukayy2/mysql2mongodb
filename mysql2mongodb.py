@@ -47,9 +47,13 @@ intSelectCounter = 0
 print('[MYSQL] total rows in Table: ' + str(intCountRowsAtStart))
 print('')
 
-boolDataToCopy = True
+boolDataToCopy = intCountRowsAtStart > 0
+
+if boolDataToCopy:
+    print('Table has Data to copy!')
 
 while boolDataToCopy:
+
     intLimitStart = intSelectCounter * intSelectLimit
     listMysqlRows = objMysqlDatabase.query(config['mysql']['table'], intLimitStart, intSelectLimit)
     intSelectCounter += 1
@@ -66,5 +70,3 @@ while boolDataToCopy:
         boolDataToCopy = False
         print('')
         print("all data copied!")
-
-
